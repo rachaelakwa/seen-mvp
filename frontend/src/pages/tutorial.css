@@ -1,0 +1,160 @@
+.tutorial-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #fafafa;
+  padding: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.tutorial-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+.tutorial-bg-1 {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 50%;
+  top: -200px;
+  right: -200px;
+}
+
+.tutorial-bg-2 {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 50%;
+  bottom: -100px;
+  left: -150px;
+}
+
+.tutorial-card {
+  background-color: #fff;
+  border-radius: 20px;
+  padding: 48px 40px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.tutorial-progress-container {
+  height: 4px;
+  background-color: #e0e0e0;
+  border-radius: 2px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.tutorial-progress-bar {
+  height: 100%;
+  background-color: #000;
+  transition: width 0.3s ease;
+}
+
+.tutorial-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background-color: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+  transition: color 0.2s ease;
+  padding: 8px 12px;
+}
+
+.tutorial-close-btn:hover {
+  color: #333;
+}
+
+.tutorial-content {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.tutorial-image-container {
+  margin-bottom: 24px;
+}
+
+.tutorial-image {
+  font-size: 72px;
+  line-height: 1;
+}
+
+.tutorial-title {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0 0 16px 0;
+  color: #000;
+}
+
+.tutorial-description {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0 0 32px 0;
+}
+
+.tutorial-step-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.tutorial-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.tutorial-button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tutorial-next-btn {
+  padding: 14px 24px;
+  border-radius: 8px;
+  border: none;
+  background-color: #000;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tutorial-next-btn:hover {
+  opacity: 0.9;
+}
+
+.tutorial-skip-btn {
+  padding: 14px 24px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  background-color: #fff;
+  color: #666;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tutorial-skip-btn:hover {
+  border-color: #ccc;
+}

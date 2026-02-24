@@ -1,0 +1,131 @@
+/* Card */
+.card {
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  padding: 16px;
+  background: #fff;
+}
+
+/* Chip */
+.chip {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #000;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chip--selected {
+  border: none;
+  background: #000;
+  color: #fff;
+}
+
+.chip-icon {
+  font-size: 16px;
+}
+
+/* ChipRow */
+.chip-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 48px;
+  justify-content: center;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: #e0e0e0;
+  margin: 16px 0;
+}
+
+/* EmptyState */
+.empty-state {
+  text-align: center;
+  padding: 40px 16px;
+  color: #999;
+}
+
+.empty-state-title {
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.empty-state-description {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* IconButton */
+.icon-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* PageContainer */
+.page-container {
+  padding: 24px 16px;
+}
+
+/* PlatformBadge */
+.platform-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #f5f5f5;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.platform-badge-emoji {
+  font-size: 14px;
+}
+
+/* SectionTitle */
+.section-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 56px;
+  margin-top: 0;
+  text-align: center;
+}
+
+/* TogglePill */
+.toggle-pill {
+  display: inline-flex;
+  background: #f0f0f0;
+  border-radius: 20px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.toggle-pill-button {
+  padding: 8px 16px;
+  border-radius: 16px;
+  border: none;
+  background: transparent;
+  color: #000;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.toggle-pill-button--active {
+  background: #000;
+  color: #fff;
+}

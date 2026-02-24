@@ -1,0 +1,635 @@
+/* ===========================
+   CircleAvatar
+   =========================== */
+
+.circle-avatar {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+/* ===========================
+   CirclesRow
+   =========================== */
+
+.circles-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 48px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.circles-row-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.circles-row-name {
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  max-width: 72px;
+}
+
+/* ===========================
+   FriendBubble
+   =========================== */
+
+.friend-bubble {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.friend-bubble-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.friend-bubble-content {
+  background: #f0f0f0;
+  border-radius: 12px;
+  padding: 12px;
+  flex: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.friend-bubble-name {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.friend-bubble-text {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+/* ===========================
+   FriendsSayingList
+   =========================== */
+
+.friends-saying-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* ===========================
+   FriendRecCard
+   =========================== */
+
+.friend-rec-card {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.friend-rec-card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.friend-rec-card-body {
+  padding: 12px;
+}
+
+.friend-rec-card-title {
+  margin: 0 0 6px 0;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.friend-rec-card-platform-wrapper {
+  margin: 0 0 8px 0;
+}
+
+.friend-rec-card-platform {
+  font-size: 12px;
+  color: #999;
+}
+
+.friend-rec-card-attribution {
+  margin: 6px 0 0 0;
+  font-size: 12px;
+  color: #999;
+}
+
+.friend-rec-card-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.friend-rec-card-btn-love {
+  flex: 1;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.friend-rec-card-btn-link {
+  flex: 1;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #666;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* ===========================
+   RecentActivity
+   =========================== */
+
+.recent-activity-group {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+}
+
+.recent-activity-group-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.recent-activity-group-header-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+}
+
+.recent-activity-item {
+  display: flex;
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.recent-activity-item-thumbnail {
+  flex: 0 0 60px;
+}
+
+.recent-activity-item-image {
+  width: 60px;
+  height: 90px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.recent-activity-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.recent-activity-item-title {
+  margin: 0 0 2px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #000;
+}
+
+.recent-activity-item-platform {
+  margin: 0 0 4px 0;
+  font-size: 11px;
+  color: #999;
+}
+
+.recent-activity-item-time {
+  display: inline-block;
+  background: #f0f0f0;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.recent-activity-item-save-btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* ===========================
+   Circles Pages - Shared Styles
+   =========================== */
+
+/* --- Version Toggle (CirclesPage) --- */
+
+.version-toggle {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 100;
+  display: flex;
+  gap: 8px;
+  background-color: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.version-toggle-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background-color: #f0f0f0;
+  color: #666;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.version-toggle-btn.active {
+  background-color: #000;
+  color: #fff;
+}
+
+/* --- Page Containers --- */
+
+.circles-v1-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.circles-v2-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+}
+
+/* --- Recommend Button (shared V1 & V2) --- */
+
+.recommend-btn {
+  margin-top: 48px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: 2px solid #000;
+  background-color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #000;
+  width: fit-content;
+}
+
+.recommend-btn:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+/* --- Modal (shared V1 & V2) --- */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+.modal-field {
+  margin-bottom: 20px;
+}
+
+.modal-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.modal-label-spaced {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.modal-select {
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+}
+
+.modal-friend-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.modal-friend-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #333;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-friend-btn.selected {
+  border: 2px solid #000;
+  background-color: #000;
+  color: #fff;
+}
+
+.modal-textarea {
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  min-height: 80px;
+  resize: vertical;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-send-btn {
+  flex: 1;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  background-color: #000;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-send-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.modal-cancel-btn {
+  flex: 1;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #666;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* --- Section Heading (shared V1 & V2) --- */
+
+.section-heading {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 24px;
+  color: #000;
+}
+
+/* --- V1: Friends' Picks Grid --- */
+
+.friends-picks-section {
+  margin-bottom: 56px;
+}
+
+.recs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 28px;
+}
+
+/* --- V2: Recommendations Chat Section --- */
+
+.recs-section {
+  margin-top: 48px;
+}
+
+.filter-bar {
+  margin-bottom: 24px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: #fff;
+  color: #000;
+  transition: all 0.2s ease;
+}
+
+.filter-select.active {
+  background-color: #000;
+  color: #fff;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.search-input:focus {
+  border: 1px solid #000;
+}
+
+.recs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-size: 14px;
+}
+
+.rec-item {
+  margin-bottom: 8px;
+}
+
+.rec-sender {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 6px;
+  padding-left: 12px;
+}
+
+.rec-bubble {
+  background-color: #f0f0f0;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.rec-thumbnail {
+  width: 60px;
+  height: 90px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.rec-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.rec-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #000;
+}
+
+.rec-note {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.rec-timestamp {
+  font-size: 11px;
+  color: #999;
+  margin-bottom: 12px;
+}
+
+.rec-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.rec-save-btn {
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid #000;
+  background-color: #fff;
+  color: #000;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.rec-ignore-btn {
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #999;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.activity-section {
+  margin-top: 56px;
+}
