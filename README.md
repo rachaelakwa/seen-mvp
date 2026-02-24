@@ -4,6 +4,9 @@ A mood-first streaming companion that helps you choose what to watch based on ho
 
 Instead of browsing endlessly through catalogs, Seen starts with a simple question: *how are you feeling?* It then surfaces curated show and movie recommendations tailored to your current mood, lets you save titles to a personal shelf, and connects you with friends through shared taste.
 
+
+![seen](https://github.com/user-attachments/assets/b3dd1012-7ccd-4323-b1b4-cbed3ea37525)
+
 ## Architecture
 
 The project is a full-stack JavaScript application split into two packages:
