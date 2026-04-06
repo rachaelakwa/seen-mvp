@@ -3,8 +3,13 @@ import { apiClient } from './api.js';
 export const authService = {
   signup: async (email, password) => {
     const { user, accessToken } = await apiClient.post('/auth/signup', { email, password });
+    const userKey = user.id || user._id || user.email;
     localStorage.setItem('token', accessToken);
     localStorage.setItem('user', JSON.stringify(user));
+    if (userKey) {
+      // Tutorial pointers should auto-run only for newly created users.
+      localStorage.setItem(`tutorials_enabled_${userKey}`, 'true');
+    }
     return user;
   },
 

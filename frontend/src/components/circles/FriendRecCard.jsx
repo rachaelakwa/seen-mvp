@@ -2,7 +2,7 @@ import React from 'react';
 import VibeTag from '../mood/VibeTag';
 import './circles.css';
 
-export default function FriendRecCard({ rec, friend, title, onSave }) {
+export default function FriendRecCard({ rec, friend, title, onSave, savedIds }) {
   if (!friend || !title) return null;
 
   return (
@@ -27,10 +27,11 @@ export default function FriendRecCard({ rec, friend, title, onSave }) {
         </p>
         <div className="friend-rec-card-actions">
           <button
-            onClick={() => onSave(title.id)}
-            className="friend-rec-card-btn-love"
+            onClick={() => onSave(title.id, rec.moodId)}
+            className={`friend-rec-card-btn-love ${savedIds?.has(title.id) ? 'saved' : ''}`}
+            disabled={savedIds?.has(title.id)}
           >
-            ♡ Love
+            {savedIds?.has(title.id) ? '✓ Saved' : '♡ Love'}
           </button>
           <button className="friend-rec-card-btn-link">
             🔗 Link

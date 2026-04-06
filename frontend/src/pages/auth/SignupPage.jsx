@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext.jsx';
+import SeenLogo from '../../components/shared/SeenLogo.jsx';
 import './auth.css';
 
 export function SignupPage() {
@@ -11,6 +12,8 @@ export function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { signup } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const nextPath = new URLSearchParams(location.search).get('next');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +33,7 @@ export function SignupPage() {
 
     try {
       await signup(email, password);
-      navigate('/onboarding');
+      navigate(nextPath || '/onboarding');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -41,7 +44,9 @@ export function SignupPage() {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h1 className="auth-title">Seen</h1>
+        <h1 className="auth-title">
+          <SeenLogo className="auth-logo" width={120} height={60} />
+        </h1>
         <h2 className="auth-subtitle">Create Account</h2>
 
         <form onSubmit={handleSubmit} className="auth-form">
@@ -90,7 +95,7 @@ export function SignupPage() {
 
         <p className="auth-text">
           Already have an account?{' '}
-          <Link to="/login" className="auth-link">
+          <Link to={nextPath ? `/login?next=${encodeURIComponent(nextPath)}` : '/login'} className="auth-link">
             Log In
           </Link>
         </p>

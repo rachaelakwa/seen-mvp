@@ -11,7 +11,16 @@ export function getPicksForMood({ moodId, picks, count = 3 }) {
     return picks.slice(0, count);
   }
 
-  const filtered = picks.filter(pick => pick.moodId === moodId);
+  const filtered = picks.filter((pick) => {
+    // Backward-compatible filtering:
+    // - static picks use moodId
+    // - Watchmode picks can include inferred_moods
+    if (pick.moodId === moodId) return true;
+    if (Array.isArray(pick.inferred_moods)) {
+      return pick.inferred_moods.includes(moodId);
+    }
+    return false;
+  });
   return filtered.slice(0, count);
 }
 

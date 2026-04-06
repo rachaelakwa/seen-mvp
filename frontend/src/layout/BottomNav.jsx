@@ -1,18 +1,19 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { TAB_IDS } from '../app/constants';
-import { FiUser, FiLogOut } from 'react-icons/fi';
+import { FiUser, FiLogOut, FiMail, FiSmile, FiUsers, FiBookmark } from 'react-icons/fi';
 import './layout.css';
 
 export default function BottomNav({ activeTab, onTabChange }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { logout } = useAuth();
 
   const tabs = [
-    { id: TAB_IDS.MOOD, label: 'Mood' },
-    { id: TAB_IDS.CIRCLES, label: 'Circles' },
-    { id: TAB_IDS.VIBESHELF, label: 'Vibeshelf' },
+    { id: TAB_IDS.MOOD, label: 'Mood', subtitle: 'Your mood, your picks', icon: FiSmile },
+    { id: TAB_IDS.CIRCLES, label: 'Circles', subtitle: 'Your social watchlist', icon: FiUsers },
+    { id: TAB_IDS.VIBESHELF, label: 'Vibeshelf', subtitle: 'Your saved shows by vibe', icon: FiBookmark },
   ];
 
   const handleTabChange = (tabId) => {
@@ -27,6 +28,10 @@ export default function BottomNav({ activeTab, onTabChange }) {
 
   const handleProfileClick = () => {
     navigate('/profile');
+  };
+
+  const handleInviteClick = () => {
+    navigate('/invite-inbox');
   };
 
   const handleLogout = () => {
@@ -45,6 +50,16 @@ export default function BottomNav({ activeTab, onTabChange }) {
           <FiUser size={20} />
           Profile
         </button>
+        <button
+          onClick={handleInviteClick}
+          className={`bottom-nav-invite-btn${location.pathname === '/invite-inbox' ? ' bottom-nav-invite-btn--active' : ''}`}
+        >
+          <FiMail size={20} />
+          <span className="bottom-nav-invite-content">
+            Invite
+            <span className="bottom-nav-invite-subtitle">Requests and links</span>
+          </span>
+        </button>
 
         {/* Main Navigation Tabs */}
         <div>
@@ -54,7 +69,13 @@ export default function BottomNav({ activeTab, onTabChange }) {
               onClick={() => handleTabChange(tab.id)}
               className={`bottom-nav-tab${activeTab === tab.id ? ' bottom-nav-tab--active' : ''}`}
             >
-              {tab.label}
+              <span className="bottom-nav-tab-icon">
+                <tab.icon size={18} />
+              </span>
+              <span className="bottom-nav-tab-content">
+                {tab.label}
+                {tab.subtitle && <span className="bottom-nav-tab-subtitle">{tab.subtitle}</span>}
+              </span>
             </button>
           ))}
         </div>

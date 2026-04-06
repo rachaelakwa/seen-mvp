@@ -92,6 +92,12 @@ npm install
 npm run dev             # starts on port 5173
 ```
 
+### Deploy Env Notes
+
+- Backend requires: `MONGODB_URI`, `JWT_SECRET`, `CLIENT_ORIGIN`, `WATCHMODE_API_KEY`
+- Frontend requires: `VITE_API_BASE_URL` (your deployed backend URL + `/api`)
+- `DISABLE_WATCHMODE` can stay `true` while you finish testing; switch to `false` when ready for live Watchmode data.
+
 ## License
 
 MIT

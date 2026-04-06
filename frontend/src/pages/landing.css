@@ -199,11 +199,17 @@
 }
 
 .landing-logo {
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--ln-black);
   text-decoration: none;
+  line-height: 0;
+}
+
+.landing-logo-mark {
+  color: var(--ln-black);
+  display: block;
 }
 
 .flipped-e {
@@ -434,6 +440,11 @@
   font-weight: 800;
   color: var(--ln-white);
   letter-spacing: -0.04em;
+}
+
+.bridge-logo-mark {
+  color: var(--ln-white);
+  display: block;
 }
 
 .bridge-caption {

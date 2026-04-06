@@ -13,14 +13,12 @@ const routeToTab = {
 
 export default function MainLayout({ children, showTabs = true }) {
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState(TAB_IDS.MOOD);
+  const [activeTab, setActiveTab] = useState(routeToTab[location.pathname] || null);
 
   // Sync state with URL on mount and when URL changes
   useEffect(() => {
     const tab = routeToTab[location.pathname];
-    if (tab) {
-      setActiveTab(tab);
-    }
+    setActiveTab(tab || null);
   }, [location.pathname]);
 
   // If children is AppShell, pass the tab state to it

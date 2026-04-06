@@ -11,7 +11,12 @@ export const config = {
   mongodbUri: getEnv('MONGODB_URI', 'mongodb://localhost:27017/seen'),
   jwtSecret: getEnv('JWT_SECRET', 'your-secret-key-change-this'),
   clientOrigin: getEnv('CLIENT_ORIGIN', 'http://localhost:5173'),
+  clientOrigins: getEnv('CLIENT_ORIGIN', 'http://localhost:5173,http://localhost:5174')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean),
   nodeEnv: getEnv('NODE_ENV', 'development'),
+  disableWatchmode: getEnv('DISABLE_WATCHMODE', 'false') === 'true',
 };
 
 console.log('DEBUG: Loaded PORT =', process.env.PORT, ', config.port =', config.port);

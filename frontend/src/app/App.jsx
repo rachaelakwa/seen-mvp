@@ -7,6 +7,8 @@ import { LoginPage } from '../pages/auth/LoginPage.jsx';
 import { SignupPage } from '../pages/auth/SignupPage.jsx';
 import OnboardingPage from '../pages/OnboardingPage.jsx';
 import ProfilePage from '../pages/ProfilePage.jsx';
+import InviteInboxPage from '../pages/InviteInboxPage.jsx';
+import InviteLandingPage from '../pages/InviteLandingPage.jsx';
 import MainLayout from '../layout/MainLayout.jsx';
 import AppShell from '../layout/AppShell';
 import LandingPage from '../pages/LandingPage.jsx';
@@ -40,6 +42,8 @@ export default function App() {
             }
           />
 
+          <Route path="/invite/:token" element={<InviteLandingPage />} />
+
           {/* Profile Route with Sidebar */}
           <Route
             path="/profile"
@@ -47,6 +51,16 @@ export default function App() {
               <ProtectedRoute>
                 <MainLayout>
                   <ProfilePage />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/invite-inbox"
+            element={
+              <ProtectedRoute>
+                <MainLayout>
+                  <InviteInboxPage />
                 </MainLayout>
               </ProtectedRoute>
             }

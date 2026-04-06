@@ -134,30 +134,32 @@ export default function ProfilePage() {
           <p className="profile-hint">Email cannot be changed</p>
         </div>
 
-        {/* First Name */}
-        <div className="profile-field-group">
-          <label className="profile-label">
-            First Name
-          </label>
-          <input
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            className="profile-input"
-          />
-        </div>
+        <div className="profile-row profile-row--spaced">
+          {/* First Name */}
+          <div className="profile-field-group">
+            <label className="profile-label">
+              First Name
+            </label>
+            <input
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              className="profile-input"
+            />
+          </div>
 
-        {/* Last Name */}
-        <div className="profile-field-group--large">
-          <label className="profile-label">
-            Last Name
-          </label>
-          <input
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            className="profile-input"
-          />
+          {/* Last Name */}
+          <div className="profile-field-group">
+            <label className="profile-label">
+              Last Name
+            </label>
+            <input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className="profile-input"
+            />
+          </div>
         </div>
 
         {/* Username Update Form */}
@@ -199,41 +201,43 @@ export default function ProfilePage() {
             Change Password
           </h2>
 
-          <div className="profile-form-group">
-            <label
-              htmlFor="currentPassword"
-              className="profile-label profile-label--dark"
-            >
-              Current Password
-            </label>
-            <input
-              id="currentPassword"
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className="profile-input"
-              placeholder="Enter current password"
-            />
-          </div>
+          <div className="profile-row">
+            <div className="profile-form-group">
+              <label
+                htmlFor="currentPassword"
+                className="profile-label profile-label--dark"
+              >
+                Current Password
+              </label>
+              <input
+                id="currentPassword"
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                className="profile-input"
+                placeholder="Enter current password"
+              />
+            </div>
 
-          <div className="profile-form-group">
-            <label
-              htmlFor="newPassword"
-              className="profile-label profile-label--dark"
-            >
-              New Password
-            </label>
-            <input
-              id="newPassword"
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="profile-input"
-              placeholder="Enter new password"
-            />
-            <p className="profile-hint">
-              Minimum 6 characters
-            </p>
+            <div className="profile-form-group">
+              <label
+                htmlFor="newPassword"
+                className="profile-label profile-label--dark"
+              >
+                New Password
+              </label>
+              <input
+                id="newPassword"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="profile-input"
+                placeholder="Enter new password"
+              />
+              <p className="profile-hint">
+                Minimum 6 characters
+              </p>
+            </div>
           </div>
 
           <div className="profile-form-group--last">

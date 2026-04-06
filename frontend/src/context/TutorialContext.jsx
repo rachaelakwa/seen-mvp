@@ -4,14 +4,20 @@ import { useAuth } from '../contexts/AuthContext.jsx';
 export const TutorialContext = createContext();
 
 export const TutorialProvider = ({ children }) => {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const [viewedTutorials, setViewedTutorials] = useState({});
+  const [tutorialsEnabled, setTutorialsEnabled] = useState(false);
 
   const storageKey = user?._id || user?.id || user?.email;
+  const tutorialsEnabledKey = storageKey ? `tutorials_enabled_${storageKey}` : null;
 
   useEffect(() => {
+    // Wait until auth has resolved before touching tutorial state
+    if (isLoading) return;
+
     if (!storageKey) {
       setViewedTutorials({});
+      setTutorialsEnabled(false);
       return;
     }
 
@@ -25,7 +31,10 @@ export const TutorialProvider = ({ children }) => {
     } else {
       setViewedTutorials({});
     }
-  }, [storageKey]);
+
+    // Only users created through signup should have tutorials auto-enabled.
+    setTutorialsEnabled(localStorage.getItem(tutorialsEnabledKey) === 'true');
+  }, [storageKey, isLoading, tutorialsEnabledKey]);
 
   useEffect(() => {
     if (!storageKey) return;
@@ -40,8 +49,9 @@ export const TutorialProvider = ({ children }) => {
   }, []);
 
   const isTutorialViewed = useCallback((tutorialId) => {
+    if (!tutorialsEnabled) return true;
     return viewedTutorials[tutorialId] === true;
-  }, [viewedTutorials]);
+  }, [viewedTutorials, tutorialsEnabled]);
 
   const resetTutorial = useCallback((tutorialId) => {
     setViewedTutorials(prev => {
@@ -50,6 +60,23 @@ export const TutorialProvider = ({ children }) => {
       return updated;
     });
   }, []);
+
+  useEffect(() => {
+    if (!storageKey || !tutorialsEnabledKey) return;
+
+    const requiredTutorials = [
+      'mood_page_intro',
+      'circles_page_intro',
+      'vibeshelf_page_intro',
+      'profile_page_intro',
+    ];
+
+    const hasCompletedAll = requiredTutorials.every((tutorialId) => viewedTutorials[tutorialId] === true);
+    if (hasCompletedAll && tutorialsEnabled) {
+      localStorage.setItem(tutorialsEnabledKey, 'false');
+      setTutorialsEnabled(false);
+    }
+  }, [viewedTutorials, tutorialsEnabled, storageKey, tutorialsEnabledKey]);
 
   return (
     <TutorialContext.Provider value={{ viewedTutorials, markTutorialAsViewed, isTutorialViewed, resetTutorial }}>

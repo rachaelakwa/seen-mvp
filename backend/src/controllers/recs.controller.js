@@ -1,4 +1,6 @@
 import Recommendation from '../models/Recommendation.js';
+import FriendRequest from '../models/FriendRequest.js';
+import { buildPairKey } from '../utils/friends.js';
 
 export async function createRec(req, res, next) {
   try {
@@ -6,6 +8,12 @@ export async function createRec(req, res, next) {
 
     if (!receiverId || !titleId) {
       return res.status(400).json({ message: 'receiverId and titleId required' });
+    }
+
+    const pairKey = buildPairKey(req.user.id, receiverId);
+    const connection = await FriendRequest.findOne({ pairKey, status: 'accepted' });
+    if (!connection) {
+      return res.status(403).json({ message: 'You can only send recommendations to accepted friends' });
     }
 
     const rec = new Recommendation({

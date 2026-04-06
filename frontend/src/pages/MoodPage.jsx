@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import PageContainer from '../components/shared/PageContainer';
 import SectionTitle from '../components/shared/SectionTitle';
@@ -12,18 +12,39 @@ import { PICKS } from '../data/picks';
 import { getPicksForMood } from '../utils/recommend';
 import { savesService } from '../services/saves.js';
 import { moodsService } from '../services/moods.js';
+import { titlesService } from '../services/titles.js';
 
 export default function MoodPage() {
   const { user } = useAuth();
   const [selectedMoodId, setSelectedMoodId] = useState('soft');
   const [picksCount, setPicksCount] = useState(3);
   const [savedIds, setSavedIds] = useState(new Set());
+  const [apiPicks, setApiPicks] = useState(null);
+  const [picksLoading, setPicksLoading] = useState(false);
 
   const displayName = user?.firstName || user?.username || 'there';
 
+  useEffect(() => {
+    let cancelled = false;
+    setPicksLoading(true);
+    setApiPicks(null);
+    titlesService.getByMood(selectedMoodId)
+      .then(({ titles }) => {
+        if (!cancelled) setApiPicks(titles);
+      })
+      .catch(() => {
+        if (!cancelled) setApiPicks(null); // fall back to PICKS
+      })
+      .finally(() => {
+        if (!cancelled) setPicksLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [selectedMoodId]);
+
+  const sourcePicks = apiPicks && apiPicks.length > 0 ? apiPicks : PICKS;
   const displayedPicks = getPicksForMood({
     moodId: selectedMoodId,
-    picks: PICKS,
+    picks: sourcePicks,
     count: picksCount,
   });
 
@@ -77,7 +98,10 @@ export default function MoodPage() {
         ))}
       </ChipRow>
       <PicksHeader value={picksCount} onChange={setPicksCount} />
-      <PicksGrid picks={displayedPicks} onSave={handleSave} savedIds={savedIds} />
+      {picksLoading
+        ? <p className="picks-loading">Finding picks for your mood...</p>
+        : <PicksGrid picks={displayedPicks} onSave={handleSave} savedIds={savedIds} />
+      }
     </PageContainer>
   );
 }

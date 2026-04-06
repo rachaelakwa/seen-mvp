@@ -4,7 +4,7 @@ import RecentActivityItem from './RecentActivityItem';
 import { getTitleById, getRelativeTime } from '../../utils/circlesLogic';
 import './circles.css';
 
-export default function RecentActivityGroup({ friendGroup, onSave }) {
+export default function RecentActivityGroup({ friendGroup, onSave, savedIds }) {
   const { friend, items } = friendGroup;
 
   if (!friend || items.length === 0) return null;
@@ -30,6 +30,7 @@ export default function RecentActivityGroup({ friendGroup, onSave }) {
               friend={friend}
               title={title}
               onSave={onSave}
+              savedIds={savedIds}
               relativeTime={relativeTime}
             />
           );

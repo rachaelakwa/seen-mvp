@@ -77,7 +77,13 @@
 
 /* PageContainer */
 .page-container {
-  padding: 24px 16px;
+  padding: 16px 14px;
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 14px 12px;
+  }
 }
 
 /* PlatformBadge */
@@ -115,14 +121,14 @@
 }
 
 .toggle-pill-button {
-  padding: 8px 16px;
+  padding: 10px 20px;
   border-radius: 16px;
   border: none;
   background: transparent;
   color: #000;
   cursor: pointer;
-  font-weight: 500;
-  font-size: 14px;
+  font-weight: 700;
+  font-size: 16px;
 }
 
 .toggle-pill-button--active {

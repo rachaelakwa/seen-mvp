@@ -1,4 +1,9 @@
-const API_BASE = 'http://localhost:5001/api';
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api').replace(/\/$/, '');
+
+function buildUrl(endpoint) {
+  const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  return `${API_BASE}${normalizedEndpoint}`;
+}
 
 async function request(endpoint, options = {}) {
   const token = localStorage.getItem('token');
@@ -12,7 +17,7 @@ async function request(endpoint, options = {}) {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE}${endpoint}`, {
+  const response = await fetch(buildUrl(endpoint), {
     ...options,
     headers,
   });
@@ -31,3 +36,5 @@ export const apiClient = {
   put: (endpoint, body) => request(endpoint, { method: 'PUT', body: JSON.stringify(body) }),
   delete: (endpoint) => request(endpoint, { method: 'DELETE' }),
 };
+
+export { API_BASE, buildUrl };

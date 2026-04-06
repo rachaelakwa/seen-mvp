@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext.jsx';
+import SeenLogo from '../components/shared/SeenLogo.jsx';
 import './layout.css';
 
 export default function TopBar() {
@@ -8,7 +9,9 @@ export default function TopBar() {
   return (
     <header className="top-bar">
       <div className="top-bar-left">
-        <h1 className="top-bar-title">Seen</h1>
+        <h1 className="top-bar-title">
+          <SeenLogo className="top-bar-logo" width={110} height={55} />
+        </h1>
         <p className="top-bar-subtitle">Your streaming companion</p>
       </div>
 

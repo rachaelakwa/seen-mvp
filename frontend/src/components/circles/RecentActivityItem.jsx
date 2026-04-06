@@ -2,7 +2,7 @@ import React from 'react';
 import CircleAvatar from './CircleAvatar';
 import './circles.css';
 
-export default function RecentActivityItem({ item, friend, title, onSave, relativeTime }) {
+export default function RecentActivityItem({ item, friend, title, onSave, savedIds, relativeTime }) {
   if (!title) return null;
 
   return (
@@ -27,10 +27,11 @@ export default function RecentActivityItem({ item, friend, title, onSave, relati
         </span>
         <div>
           <button
-            onClick={() => onSave(title.id)}
-            className="recent-activity-item-save-btn"
+            onClick={() => onSave(title.id, title.moodId)}
+            className={`recent-activity-item-save-btn ${savedIds?.has(title.id) ? 'saved' : ''}`}
+            disabled={savedIds?.has(title.id)}
           >
-            ♡ Save
+            {savedIds?.has(title.id) ? '✓ Saved' : '♡ Save'}
           </button>
         </div>
       </div>

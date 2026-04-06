@@ -16,11 +16,14 @@
 }
 
 .auth-title {
-  font-size: 32px;
-  font-weight: 800;
   margin-bottom: 8px;
   text-align: center;
+  line-height: 0;
+}
+
+.auth-logo {
   color: #000;
+  display: inline-block;
 }
 
 .auth-subtitle {

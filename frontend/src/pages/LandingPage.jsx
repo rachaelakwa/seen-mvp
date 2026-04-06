@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import SeenLogo from '../components/shared/SeenLogo.jsx';
 import './landing.css';
 
 function useScrollReveal() {
@@ -37,7 +38,9 @@ export default function LandingPage() {
       {/* Navbar */}
       <nav className="landing-nav">
         <div className="landing-nav-inner">
-          <Link to="/" className="landing-logo">seen</Link>
+          <Link to="/" className="landing-logo" aria-label="Seen home">
+            <SeenLogo className="landing-logo-mark" width={92} height={46} />
+          </Link>
           <div className="landing-nav-links">
             <a href="#how-it-works" className="landing-nav-link">How It Works</a>
             <Link to="/login" className="landing-nav-link">Sign In</Link>
@@ -137,7 +140,7 @@ export default function LandingPage() {
             </div>
             <div className="landing-gap-bridge">
               <div className="landing-gap-bridge-circle">
-                <span className="bridge-logo">seen</span>
+                <SeenLogo className="bridge-logo-mark" width={52} height={26} />
               </div>
               <p className="bridge-caption">Bridges the gap</p>
             </div>

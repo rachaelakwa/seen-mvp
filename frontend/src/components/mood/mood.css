@@ -72,6 +72,13 @@
 
 /* PicksGrid */
 
+.picks-loading {
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+  margin-top: 48px;
+}
+
 .picks-grid-wrapper {
   display: flex;
   justify-content: center;
@@ -90,11 +97,13 @@
 
 .picks-header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 56px;
-  flex-direction: column;
-  gap: 16px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto 16px;
+  flex-direction: row;
+  gap: 0;
 }
 
 .picks-header-title {
