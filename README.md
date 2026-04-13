@@ -100,9 +100,22 @@ npm run dev             # from the repo root; starts backend 5001 and frontend 5
 
 ### Deploy Env Notes
 
-- Backend requires: `MONGODB_URI`, `JWT_SECRET`, `CLIENT_ORIGIN`, `WATCHMODE_API_KEY`
-- Frontend requires: `VITE_API_BASE_URL` (your deployed backend URL + `/api`)
-- `DISABLE_WATCHMODE` can stay `true` while you finish testing; switch to `false` when ready for live Watchmode data.
+For a single Vercel project from the repo root:
+
+- Install Command: `npm run install:all`
+- Build Command: `npm run build`
+- Output Directory: `frontend/dist`
+
+Required Vercel env vars:
+
+- `NODE_ENV=production`
+- `MONGODB_URI` for the staging or production MongoDB database
+- `JWT_SECRET` as a long secret unique to that environment
+- `WATCHMODE_API_KEY`
+- `DISABLE_WATCHMODE=false` when live Watchmode data should be enabled
+- `VITE_API_BASE_URL=/api`
+
+`CLIENT_ORIGIN` is optional for the first Vercel deploy if Vercel system environment variables are enabled; the backend will use `https://${VERCEL_URL}`. After the first deploy, you can set `CLIENT_ORIGIN` to the final Vercel domain.
 
 ## License
 

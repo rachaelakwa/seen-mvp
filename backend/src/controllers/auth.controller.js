@@ -9,7 +9,7 @@ function authCookieOptions() {
   return {
     httpOnly: true,
     secure: isProduction,
-    sameSite: isProduction ? 'none' : 'lax',
+    sameSite: 'lax',
     maxAge: AUTH_COOKIE_MAX_AGE_MS,
     path: '/',
   };

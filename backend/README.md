@@ -21,8 +21,8 @@ cp .env.example .env
 **Required env vars:**
 - `MONGODB_URI` - MongoDB connection string (e.g., `mongodb://localhost:27017/seen`)
 - `JWT_SECRET` - Secret key for signing tokens (generate a strong one)
-- `PORT` - Server port (default: 5000)
-- `CLIENT_ORIGIN` - Frontend URL for CORS (default: http://localhost:5173)
+- `PORT` - Server port (default: 5001)
+- `CLIENT_ORIGIN` - Frontend URL for CORS. Local defaults allow `http://localhost:5173` and `http://localhost:5174`; Vercel deployments can rely on `VERCEL_URL` when `CLIENT_ORIGIN` is not set.
 
 ### 3. MongoDB Setup
 
@@ -50,7 +50,7 @@ mongosh
 npm run dev
 ```
 
-Server starts on `http://localhost:5000`
+Server starts on `http://localhost:5001`
 
 ---
 
@@ -173,7 +173,7 @@ backend/
 - **Backend persistence** for user saves, recommendations, and mood events
 - **JWT tokens** expire after 24 hours
 - **MongoDB** collections auto-created on first use (Mongoose handles schema)
-- **CORS** configured to allow frontend requests from localhost:5173
+- **CORS** configured to allow local frontend requests from localhost:5173/5174 and same-domain Vercel requests via `VERCEL_URL`
 
 ---
 
