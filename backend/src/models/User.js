@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     lowercase: true,
     trim: true,
-    match: /.+\@.+\..+/,
+    match: /.+@.+\..+/,
   },
   username: {
     type: String,

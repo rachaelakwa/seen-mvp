@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { PICKS } from '../data/picks';
-import { FRIENDS, FRIEND_MESSAGES } from '../data/circles';
 import { SHELF_ITEMS } from '../data/shelf';
 import { DEFAULT_PICKS_COUNT } from '../app/constants';
 
@@ -58,11 +57,11 @@ export function usePicks() {
 }
 
 export function useCircles() {
-  return { circles: FRIENDS };
+  return { circles: [] };
 }
 
 export function useFriendsMessages() {
-  return { messages: FRIEND_MESSAGES };
+  return { messages: [] };
 }
 
 export function useShelfItems() {

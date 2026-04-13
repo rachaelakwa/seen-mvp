@@ -2,9 +2,8 @@ import { apiClient } from './api.js';
 
 export const authService = {
   signup: async (email, password) => {
-    const { user, accessToken } = await apiClient.post('/auth/signup', { email, password });
+    const { user } = await apiClient.post('/auth/signup', { email, password });
     const userKey = user.id || user._id || user.email;
-    localStorage.setItem('token', accessToken);
     localStorage.setItem('user', JSON.stringify(user));
     if (userKey) {
       // Tutorial pointers should auto-run only for newly created users.
@@ -14,8 +13,7 @@ export const authService = {
   },
 
   login: async (email, password) => {
-    const { user, accessToken } = await apiClient.post('/auth/login', { email, password });
-    localStorage.setItem('token', accessToken);
+    const { user } = await apiClient.post('/auth/login', { email, password });
     localStorage.setItem('user', JSON.stringify(user));
     return user;
   },
@@ -36,12 +34,21 @@ export const authService = {
     return response;
   },
 
-  logout: () => {
+  logout: async () => {
+    try {
+      await apiClient.post('/auth/logout', {});
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    }
+  },
+
+  clearLocalSession: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   },
 
-  getToken: () => localStorage.getItem('token'),
+  getToken: () => null,
   getUser: () => {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;

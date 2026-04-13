@@ -1,8 +1,7 @@
 import React from 'react';
-import CircleAvatar from './CircleAvatar';
 import './circles.css';
 
-export default function RecentActivityItem({ item, friend, title, onSave, savedIds, relativeTime }) {
+export default function RecentActivityItem({ title, onSave, savedIds, relativeTime }) {
   if (!title) return null;
 
   return (

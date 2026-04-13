@@ -8,7 +8,7 @@ export function generateToken(userId) {
 export function verifyToken(token) {
   try {
     return jwt.verify(token, config.jwtSecret);
-  } catch (error) {
+  } catch {
     return null;
   }
 }

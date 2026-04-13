@@ -14,8 +14,8 @@ import AppShell from '../layout/AppShell';
 import LandingPage from '../pages/LandingPage.jsx';
 
 function LandingOrRedirect() {
-  const { user, loading } = useAuth();
-  if (loading) return null;
+  const { user, isLoading } = useAuth();
+  if (isLoading) return null;
   return user ? <Navigate to="/mood" replace /> : <LandingPage />;
 }
 

@@ -1,4 +1,4 @@
-export function errorMiddleware(err, req, res, next) {
+export function errorMiddleware(err, req, res, _next) {
   console.error('Error:', err.message);
 
   // Mongoose validation error

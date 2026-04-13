@@ -89,7 +89,13 @@ npm run dev             # starts on port 5001
 ```bash
 cd frontend
 npm install
-npm run dev             # starts on port 5173
+npm run dev             # starts on port 5174 locally if 5173 is in use
+```
+
+### Run both locally
+
+```bash
+npm run dev             # from the repo root; starts backend 5001 and frontend 5174
 ```
 
 ### Deploy Env Notes

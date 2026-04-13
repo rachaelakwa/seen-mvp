@@ -1,6 +1,31 @@
 import User from '../models/User.js';
 import { generateToken } from '../utils/tokens.js';
 
+const AUTH_COOKIE_NAME = 'seen_token';
+const AUTH_COOKIE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
+function authCookieOptions() {
+  const isProduction = process.env.NODE_ENV === 'production';
+  return {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
+    maxAge: AUTH_COOKIE_MAX_AGE_MS,
+    path: '/',
+  };
+}
+
+function setAuthCookie(res, token) {
+  res.cookie(AUTH_COOKIE_NAME, token, authCookieOptions());
+}
+
+function clearAuthCookie(res) {
+  res.clearCookie(AUTH_COOKIE_NAME, {
+    ...authCookieOptions(),
+    maxAge: undefined,
+  });
+}
+
 export async function signup(req, res, next) {
   try {
     const { email, password } = req.body;
@@ -23,13 +48,13 @@ export async function signup(req, res, next) {
     await user.save();
 
     const token = generateToken(user._id);
+    setAuthCookie(res, token);
 
     res.status(201).json({
       user: {
         id: user._id,
         email: user.email,
       },
-      accessToken: token,
     });
   } catch (error) {
     next(error);
@@ -58,6 +83,7 @@ export async function login(req, res, next) {
     }
 
     const token = generateToken(user._id);
+    setAuthCookie(res, token);
 
     res.json({
       user: {
@@ -67,8 +93,16 @@ export async function login(req, res, next) {
         firstName: user.firstName,
         lastName: user.lastName,
       },
-      accessToken: token,
     });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function logout(req, res, next) {
+  try {
+    clearAuthCookie(res);
+    res.json({ message: 'Logged out' });
   } catch (error) {
     next(error);
   }

@@ -34,8 +34,8 @@ export default function BottomNav({ activeTab, onTabChange }) {
     navigate('/invite-inbox');
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/login');
   };
 

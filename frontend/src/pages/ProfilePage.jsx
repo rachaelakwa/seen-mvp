@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import PageContainer from '../components/shared/PageContainer';
 import TutorialPointer from '../components/TutorialPointer';
@@ -7,7 +6,6 @@ import { authService } from '../services/auth.js';
 import './profile.css';
 
 export default function ProfilePage() {
-  const navigate = useNavigate();
   const { user } = useAuth();
   const [username, setUsername] = useState('');
   const [firstName, setFirstName] = useState('');

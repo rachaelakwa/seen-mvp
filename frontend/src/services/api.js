@@ -1,4 +1,10 @@
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api').replace(/\/$/, '');
+const configuredApiBase = import.meta.env.VITE_API_BASE_URL;
+
+if (import.meta.env.PROD && !configuredApiBase) {
+  throw new Error('VITE_API_BASE_URL must be set for production builds');
+}
+
+const API_BASE = (configuredApiBase || 'http://localhost:5001/api').replace(/\/$/, '');
 
 function buildUrl(endpoint) {
   const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
@@ -6,28 +12,31 @@ function buildUrl(endpoint) {
 }
 
 async function request(endpoint, options = {}) {
-  const token = localStorage.getItem('token');
-  
   const headers = {
     'Content-Type': 'application/json',
     ...options.headers,
   };
 
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
   const response = await fetch(buildUrl(endpoint), {
     ...options,
     headers,
+    credentials: 'include',
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || `API Error: ${response.status}`);
+    const errorText = await response.text();
+    let message = errorText || `API Error: ${response.status}`;
+    try {
+      const error = JSON.parse(errorText);
+      message = error.message || message;
+    } catch {
+      // Keep the raw text when the server returns non-JSON, such as an HTML 404 page.
+    }
+    throw new Error(message);
   }
 
-  return response.json();
+  const responseText = await response.text();
+  return responseText ? JSON.parse(responseText) : null;
 }
 
 export const apiClient = {

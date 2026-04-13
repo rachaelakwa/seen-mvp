@@ -11,7 +11,7 @@ const routeToTab = {
   '/vibeshelf': TAB_IDS.VIBESHELF,
 };
 
-export default function MainLayout({ children, showTabs = true }) {
+export default function MainLayout({ children }) {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState(routeToTab[location.pathname] || null);
 

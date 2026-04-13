@@ -1,5 +1,6 @@
 import FriendRequest from '../models/FriendRequest.js';
-import { toUserPreview } from '../utils/friends.js';
+import User from '../models/User.js';
+import { buildPairKey, toUserPreview } from '../utils/friends.js';
 
 function toRequestResponse(request, direction = 'incoming') {
   const otherUser = direction === 'incoming' ? request.fromUserId : request.toUserId;
@@ -35,6 +36,109 @@ export async function getFriends(req, res, next) {
     });
 
     res.json({ friends });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function discoverUsers(req, res, next) {
+  try {
+    const currentUserId = req.user.id;
+    const search = String(req.query.search || '').trim();
+    const limit = Math.min(parseInt(req.query.limit || '20', 10), 50);
+
+    const query = {
+      _id: { $ne: currentUserId },
+    };
+
+    if (search) {
+      const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const searchRegex = new RegExp(escapedSearch, 'i');
+      query.$or = [
+        { email: searchRegex },
+        { username: searchRegex },
+        { firstName: searchRegex },
+        { lastName: searchRegex },
+      ];
+    }
+
+    const users = await User.find(query)
+      .select('email username firstName lastName')
+      .sort({ firstName: 1, username: 1, email: 1 })
+      .limit(limit);
+
+    const pairKeys = users.map((user) => buildPairKey(currentUserId, user._id));
+    const requests = await FriendRequest.find({ pairKey: { $in: pairKeys } });
+    const requestByPairKey = new Map(requests.map((request) => [request.pairKey, request]));
+
+    res.json({
+      users: users.map((user) => {
+        const request = requestByPairKey.get(buildPairKey(currentUserId, user._id));
+        return {
+          ...toUserPreview(user),
+          friendshipStatus: request?.status || 'none',
+          requestId: request ? String(request._id) : null,
+          requestDirection: request
+            ? (String(request.fromUserId) === String(currentUserId) ? 'sent' : 'incoming')
+            : null,
+        };
+      }),
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function sendRequest(req, res, next) {
+  try {
+    const currentUserId = req.user.id;
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ message: 'userId required' });
+    }
+
+    if (String(userId) === String(currentUserId)) {
+      return res.status(400).json({ message: 'You cannot add yourself' });
+    }
+
+    const targetUser = await User.findById(userId).select('email username firstName lastName');
+    if (!targetUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const pairKey = buildPairKey(currentUserId, userId);
+    let request = await FriendRequest.findOne({ pairKey });
+
+    if (request?.status === 'accepted') {
+      return res.status(409).json({
+        request,
+        user: toUserPreview(targetUser),
+        message: 'You are already friends',
+      });
+    }
+
+    if (!request) {
+      request = new FriendRequest({
+        fromUserId: currentUserId,
+        toUserId: userId,
+        status: 'pending',
+      });
+    } else {
+      request.fromUserId = currentUserId;
+      request.toUserId = userId;
+      request.status = 'pending';
+      request.respondedAt = null;
+      request.inviteLinkId = null;
+    }
+
+    await request.save();
+
+    res.status(201).json({
+      request,
+      user: toUserPreview(targetUser),
+      message: 'Friend request sent',
+    });
   } catch (error) {
     next(error);
   }

@@ -24,7 +24,7 @@ const detailCache = new Map();
 const DETAIL_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 function getApiKey() {
-  return process.env.WATCHMODE_API_KEY;
+  return config.watchmodeApiKey;
 }
 
 async function watchmodeFetch(path) {

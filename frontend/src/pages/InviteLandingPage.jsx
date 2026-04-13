@@ -15,7 +15,7 @@ function inviterName(inviter = {}) {
 
 export default function InviteLandingPage() {
   const { token } = useParams();
-  const { token: authToken } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [invite, setInvite] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -66,7 +66,7 @@ export default function InviteLandingPage() {
               </p>
               {!invite.usable ? <p>This invite link is no longer active.</p> : null}
 
-              {!authToken ? (
+              {!user ? (
                 <div className="invite-link-actions">
                   <Link to={`/login${nextQuery}`} className="recommend-btn">Log in to continue</Link>
                   <Link to={`/signup${nextQuery}`} className="recommend-btn">Create account</Link>

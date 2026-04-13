@@ -5,8 +5,8 @@ import SectionTitle from '../components/shared/SectionTitle';
 import CirclesRow from '../components/circles/CirclesRow';
 import RecentActivityGroup from '../components/circles/RecentActivityGroup';
 import TutorialPointer from '../components/TutorialPointer';
+import EmptyState from '../components/shared/EmptyState';
 import { PICKS } from '../data/picks';
-import { FRIENDS, FRIEND_RECS, FRIEND_ACTIVITY } from '../data/circles';
 import { getTitleById, getSortedFriendRecs, getFriendById, getRecentActivity, groupActivityByFriend } from '../utils/circlesLogic';
 import { savesService } from '../services/saves.js';
 import { recsService } from '../services/recs.js';
@@ -60,7 +60,7 @@ export default function CirclesPage() {
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [message, setMessage] = useState('');
   const [savedIds, setSavedIds] = useState(new Set());
-  const [friends, setFriends] = useState(FRIENDS);
+  const [friends, setFriends] = useState([]);
   const [friendsLoaded, setFriendsLoaded] = useState(false);
   const [inboxRecs, setInboxRecs] = useState([]);
   const [inboxLoaded, setInboxLoaded] = useState(false);
@@ -68,6 +68,11 @@ export default function CirclesPage() {
   const [copyState, setCopyState] = useState('');
   const [dismissedRecIds, setDismissedRecIds] = useState(new Set());
   const [composeError, setComposeError] = useState('');
+  const [discoverSearch, setDiscoverSearch] = useState('');
+  const [discoverUsers, setDiscoverUsers] = useState([]);
+  const [discoverLoaded, setDiscoverLoaded] = useState(false);
+  const [discoverError, setDiscoverError] = useState('');
+  const [requestingUserIds, setRequestingUserIds] = useState(new Set());
 
   useEffect(() => {
     friendsService.getFriends()
@@ -120,6 +125,28 @@ export default function CirclesPage() {
       .then(({ saves }) => setSavedIds(new Set(saves.map(s => s.titleId))))
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    setDiscoverLoaded(false);
+    setDiscoverError('');
+
+    friendsService.discoverUsers(discoverSearch)
+      .then(({ users }) => {
+        if (!cancelled) setDiscoverUsers(Array.isArray(users) ? users : []);
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setDiscoverUsers([]);
+          setDiscoverError(err.message || 'Could not load people right now.');
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setDiscoverLoaded(true);
+      });
+
+    return () => { cancelled = true; };
+  }, [discoverSearch]);
 
   const handleSaveToShelf = useCallback(async (titleId, moodId) => {
     if (savedIds.has(titleId)) return;
@@ -188,6 +215,27 @@ export default function CirclesPage() {
     }
   }, []);
 
+  const handleSendFriendRequest = useCallback(async (userId) => {
+    setRequestingUserIds(prev => new Set(prev).add(userId));
+    setDiscoverError('');
+    try {
+      await friendsService.sendRequest(userId);
+      setDiscoverUsers(prev => prev.map(user => (
+        user.id === userId
+          ? { ...user, friendshipStatus: 'pending', requestDirection: 'sent' }
+          : user
+      )));
+    } catch (err) {
+      setDiscoverError(err.message || 'Could not send friend request.');
+    } finally {
+      setRequestingUserIds(prev => {
+        const next = new Set(prev);
+        next.delete(userId);
+        return next;
+      });
+    }
+  }, []);
+
   const toggleFriend = (friendId) => {
     setSelectedFriends(prev =>
       prev.includes(friendId)
@@ -203,10 +251,10 @@ export default function CirclesPage() {
     setMessage('');
   };
 
-  const friendsSource = friendsLoaded && friends.length > 0 ? friends : FRIENDS;
-  const recSource = inboxLoaded && inboxRecs.length > 0 ? inboxRecs : FRIEND_RECS;
+  const friendsSource = friendsLoaded ? friends : [];
+  const recSource = inboxLoaded ? inboxRecs : [];
   const sortedRecs = getSortedFriendRecs(recSource);
-  const recentActivity = getRecentActivity(FRIEND_ACTIVITY);
+  const recentActivity = getRecentActivity([]);
   const groupedActivity = groupActivityByFriend(recentActivity, friendsSource);
 
   let filteredRecs = sortedRecs.filter(rec => !dismissedRecIds.has(rec.id));
@@ -222,6 +270,22 @@ export default function CirclesPage() {
   }
 
   const isFormValid = selectedTitle && selectedFriends.length > 0;
+  const canRecommend = friendsSource.length > 0;
+
+  function getFriendActionLabel(user) {
+    if (requestingUserIds.has(user.id)) return 'Sending...';
+    if (user.friendshipStatus === 'accepted') return 'Friends';
+    if (user.friendshipStatus === 'pending' && user.requestDirection === 'sent') return 'Request sent';
+    if (user.friendshipStatus === 'pending' && user.requestDirection === 'incoming') return 'In inbox';
+    if (user.friendshipStatus === 'declined') return 'Request again';
+    return 'Add friend';
+  }
+
+  function canSendFriendRequest(user) {
+    return !requestingUserIds.has(user.id)
+      && user.friendshipStatus !== 'accepted'
+      && !(user.friendshipStatus === 'pending' && user.requestDirection === 'sent');
+  }
 
   return (
     <>
@@ -230,34 +294,16 @@ export default function CirclesPage() {
         <div className="circles-v2-container">
           <SectionTitle>Your circles</SectionTitle>
 
-          <CirclesRow friends={friendsSource} />
+          {friendsLoaded && friendsSource.length === 0 ? (
+            <EmptyState
+              title="No friends yet"
+              description="Invite someone to start sharing recommendations."
+            />
+          ) : (
+            <CirclesRow friends={friendsSource} />
+          )}
 
           <div className="circles-actions-row">
-            <div className="invite-link-card">
-              <p className="invite-link-title">Invite friends with your link</p>
-              <p className="invite-link-url">{inviteLink || 'No link yet. Generate one below.'}</p>
-              <div className="invite-link-actions">
-                {inviteLink ? (
-                  <button
-                    className="recommend-btn"
-                    onClick={handleCopyInviteLink}
-                  >
-                    {copyState || 'Copy invite link'}
-                  </button>
-                ) : (
-                  <button
-                    className="recommend-btn"
-                    onClick={handleGenerateInviteLink}
-                  >
-                    {copyState || 'Generate invite link'}
-                  </button>
-                )}
-                <Link className="recommend-btn" to="/invite-inbox">
-                  Open invite inbox
-                </Link>
-              </div>
-            </div>
-
             <div className="circles-compose-card">
               <p className="circles-compose-card-title">Share a recommendation</p>
               <p className="circles-compose-card-note">
@@ -266,9 +312,71 @@ export default function CirclesPage() {
               <button
                 className="recommend-btn"
                 onClick={() => setShowCompose(true)}
+                disabled={!canRecommend}
               >
                 + Recommend for a friend
               </button>
+            </div>
+
+            <div className="circles-compose-card circles-discover-card">
+              <div className="circles-discover-header">
+                <p className="circles-compose-card-title">Find people</p>
+                {inviteLink ? (
+                  <button
+                    className="recommend-btn circles-discover-invite-btn"
+                    onClick={handleCopyInviteLink}
+                  >
+                    {copyState || 'Invite'}
+                  </button>
+                ) : (
+                  <button
+                    className="recommend-btn circles-discover-invite-btn"
+                    onClick={handleGenerateInviteLink}
+                  >
+                    {copyState || 'Invite'}
+                  </button>
+                )}
+              </div>
+              <p className="circles-compose-card-note">
+                Search existing Seen users and send a circle request.
+              </p>
+              <Link className="circles-discover-inbox-link" to="/invite-inbox">
+                View requests
+              </Link>
+              <input
+                className="search-input circles-discover-input"
+                type="text"
+                placeholder="Search by name, username, or email"
+                value={discoverSearch}
+                onChange={(e) => setDiscoverSearch(e.target.value)}
+              />
+              {discoverError ? <p className="circles-compose-error">{discoverError}</p> : null}
+              <div className="circles-discover-list">
+                {!discoverLoaded ? (
+                  <p className="circles-discover-meta">Loading people...</p>
+                ) : discoverUsers.length === 0 ? (
+                  <p className="circles-discover-meta">No users found</p>
+                ) : (
+                  discoverUsers.map(user => {
+                    const name = getUserDisplayName(user);
+                    return (
+                      <div key={user.id} className="circles-discover-item">
+                        <div>
+                          <p className="circles-discover-name">{name}</p>
+                          <p className="circles-discover-email">{user.email}</p>
+                        </div>
+                        <button
+                          className="recommend-btn circles-discover-btn"
+                          onClick={() => handleSendFriendRequest(user.id)}
+                          disabled={!canSendFriendRequest(user)}
+                        >
+                          {getFriendActionLabel(user)}
+                        </button>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
             </div>
           </div>
 
@@ -294,15 +402,19 @@ export default function CirclesPage() {
                 <div className="modal-field">
                   <label className="modal-label-spaced">Send to which friends?</label>
                   <div className="modal-friend-list">
-                    {friendsSource.map(friend => (
-                      <button
-                        key={friend.id}
-                        onClick={() => toggleFriend(friend.id)}
-                        className={`modal-friend-btn ${selectedFriends.includes(friend.id) ? 'selected' : ''}`}
-                      >
-                        {friend.name}
-                      </button>
-                    ))}
+                    {friendsSource.length === 0 ? (
+                      <p className="empty-state">Invite friends before sending recommendations.</p>
+                    ) : (
+                      friendsSource.map(friend => (
+                        <button
+                          key={friend.id}
+                          onClick={() => toggleFriend(friend.id)}
+                          className={`modal-friend-btn ${selectedFriends.includes(friend.id) ? 'selected' : ''}`}
+                        >
+                          {friend.name}
+                        </button>
+                      ))
+                    )}
                   </div>
                 </div>
 
@@ -427,14 +539,18 @@ export default function CirclesPage() {
               <span className="section-count-chip">{groupedActivity.length}</span>
             </div>
             <div>
-              {groupedActivity.map(group => (
-                <RecentActivityGroup
-                  key={group.friendId}
-                  friendGroup={group}
-                  onSave={handleSaveToShelf}
-                  savedIds={savedIds}
-                />
-              ))}
+              {groupedActivity.length === 0 ? (
+                <div className="empty-state">No friend activity yet</div>
+              ) : (
+                groupedActivity.map(group => (
+                  <RecentActivityGroup
+                    key={group.friendId}
+                    friendGroup={group}
+                    onSave={handleSaveToShelf}
+                    savedIds={savedIds}
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>

@@ -233,6 +233,100 @@ export const PICKS = [
     vibeTag: "Fast dialogue immersion",
     friendNote: "Brain fully on.",
     imageUrl: "https://image.tmdb.org/t/p/w500/n0ybibhJtQ5icDqTp8eRytcIHJx.jpg"
+  },
+
+  // ---------------- OVERWHELMED ----------------
+  {
+    id: "overwhelmed_1",
+    moodId: "overwhelmed",
+    title: "Inside Out",
+    platform: "Disney+",
+    vibeTag: "Big feelings, gently held",
+    friendNote: "Lets the emotions breathe.",
+    imageUrl: "https://image.tmdb.org/t/p/w500/2H1TmgdfNtsKlU9jKdeNyYL5y8T.jpg"
+  },
+  {
+    id: "overwhelmed_2",
+    moodId: "overwhelmed",
+    title: "Queer Eye",
+    platform: "Netflix",
+    vibeTag: "Tender reset",
+    friendNote: "Kind without being heavy.",
+    imageUrl: "https://image.tmdb.org/t/p/w500/pYvI9YoDqJrY70PZ3c3gU59Dfwc.jpg"
+  },
+  {
+    id: "overwhelmed_3",
+    moodId: "overwhelmed",
+    title: "The Good Place",
+    platform: "Netflix",
+    vibeTag: "Existential but light",
+    friendNote: "A soft landing for a loud brain.",
+    imageUrl: "https://image.tmdb.org/t/p/w500/qIhsuhoIYR5yTnDta0IL4senbeN.jpg"
+  },
+  {
+    id: "overwhelmed_4",
+    moodId: "overwhelmed",
+    title: "About Time",
+    platform: "Prime Video",
+    vibeTag: "Cathartic and warm",
+    friendNote: "Emotional, but in a safe way.",
+    imageUrl: "https://image.tmdb.org/t/p/w500/iR1bVfURbN7r1C46WHFbwCkVve.jpg"
+  },
+  {
+    id: "overwhelmed_5",
+    moodId: "overwhelmed",
+    title: "Our Planet",
+    platform: "Netflix",
+    vibeTag: "Slow wonder",
+    friendNote: "Gives your nervous system space.",
+    imageUrl: "https://image.tmdb.org/t/p/w500/4Qh5pZb0evVWX3irb9n2hLiB7SN.jpg"
+  },
+
+  // ---------------- WIRED ----------------
+  {
+    id: "wired_1",
+    moodId: "wired",
+    title: "Mad Max: Fury Road",
+    platform: "Max",
+    vibeTag: "Pure adrenaline",
+    friendNote: "No slow parts, just momentum.",
+    imageUrl: "https://image.tmdb.org/t/p/w500/hA2ple9q4qnwxp3hKVNhroipsir.jpg"
+  },
+  {
+    id: "wired_2",
+    moodId: "wired",
+    title: "Spider-Man: Into the Spider-Verse",
+    platform: "Netflix",
+    vibeTag: "Kinetic and bright",
+    friendNote: "Fast, colorful, impossible to half-watch.",
+    imageUrl: "https://image.tmdb.org/t/p/w500/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg"
+  },
+  {
+    id: "wired_3",
+    moodId: "wired",
+    title: "John Wick",
+    platform: "Peacock",
+    vibeTag: "Stylized focus",
+    friendNote: "Clean action, no wasted motion.",
+    imageUrl: "https://image.tmdb.org/t/p/w500/fZPSd91yGE9fCcCe6OoQr6E3Bev.jpg"
+  },
+  {
+    id: "wired_4",
+    moodId: "wired",
+    title: "The Boys",
+    platform: "Prime Video",
+    vibeTag: "Sharp and chaotic",
+    friendNote: "Matches restless energy.",
+    imageUrl: "https://image.tmdb.org/t/p/w500/stTEycfG9928HYGEISBFaG1ngjM.jpg"
+  },
+  {
+    id: "wired_5",
+    moodId: "wired",
+    title: "Edge of Tomorrow",
+    platform: "Max",
+    vibeTag: "Looped-in intensity",
+    friendNote: "Punchy, clever, and fast.",
+    imageUrl: "https://image.tmdb.org/t/p/w500/xjw5trHV7Mwo61P0kCTy8paEkgO.jpg"
   }
 ];
 
