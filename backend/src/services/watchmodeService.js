@@ -19,6 +19,8 @@ const MOOD_GENRES = {
 // In-memory cache: moodId → { data, expiresAt }
 const cache = new Map();
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
+const TITLES_PER_MOOD = 10;
+const WATCHMODE_CANDIDATE_LIMIT = 20;
 // In-memory detail cache: watchmodeId → { data, expiresAt }
 const detailCache = new Map();
 const DETAIL_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
@@ -43,7 +45,7 @@ async function fetchTitlesByMood(moodId) {
 
   const genreParam = genres.join(',');
   const data = await watchmodeFetch(
-    `/list-titles/?types=movie,tv_series&genres=${genreParam}&limit=8&regions=US&sort_by=popularity_desc`
+    `/list-titles/?types=movie,tv_series&genres=${genreParam}&limit=${WATCHMODE_CANDIDATE_LIMIT}&regions=US&sort_by=popularity_desc`
   );
 
   return data.titles || [];
@@ -89,6 +91,16 @@ function normalizeTitle(moodId, detail) {
   };
 }
 
+function moodFitScore(title, moodId) {
+  const moodScores = title.mood_scores || {};
+  const selectedMoodScore = moodScores[moodId] || 0;
+  const strongestOtherScore = Object.entries(moodScores)
+    .filter(([key]) => key !== moodId)
+    .reduce((max, [, score]) => Math.max(max, score), 0);
+  const directMoodBonus = title.inferred_moods?.includes(moodId) ? 4 : 0;
+  return selectedMoodScore * 3 + directMoodBonus - strongestOtherScore;
+}
+
 export async function getTitlesByMood(moodId) {
   // Optional local/demo mode: skip Watchmode network calls entirely.
   if (config.disableWatchmode) {
@@ -112,7 +124,14 @@ export async function getTitlesByMood(moodId) {
     const titles = detailResults
       .filter(r => r.status === 'fulfilled')
       .map(r => normalizeTitle(moodId, r.value))
-      .filter(t => t.platform !== null); // only include titles with a streaming source
+      .filter(t => t.platform !== null) // only include titles with a streaming source
+      .map((title, index) => ({ title, index }))
+      .sort((a, b) => {
+        const scoreDiff = moodFitScore(b.title, moodId) - moodFitScore(a.title, moodId);
+        return scoreDiff || a.index - b.index;
+      })
+      .map(({ title }) => title)
+      .slice(0, TITLES_PER_MOOD);
 
     cache.set(moodId, { data: titles, expiresAt: Date.now() + CACHE_TTL_MS });
     return titles;

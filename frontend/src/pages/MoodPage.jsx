@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import PageContainer from '../components/shared/PageContainer';
 import SectionTitle from '../components/shared/SectionTitle';
@@ -19,10 +19,26 @@ export default function MoodPage() {
   const [selectedMoodId, setSelectedMoodId] = useState('soft');
   const [picksCount, setPicksCount] = useState(3);
   const [savedIds, setSavedIds] = useState(new Set());
+  const [seenTitleIds, setSeenTitleIds] = useState(new Set());
   const [apiPicks, setApiPicks] = useState(null);
-  const [picksLoading, setPicksLoading] = useState(false);
+  const [picksLoading, setPicksLoading] = useState(true);
+  const recordedImpressionKeys = useRef(new Set());
 
   const displayName = user?.firstName || user?.username || 'there';
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all([
+      savesService.getSaves(),
+      moodsService.getRecentImpressions(),
+    ])
+      .then(([{ saves }, { impressions }]) => {
+        if (!cancelled) setSavedIds(new Set(saves.map((save) => save.titleId)));
+        if (!cancelled) setSeenTitleIds(new Set(impressions.map((impression) => impression.titleId)));
+      })
+      .catch(console.error);
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -42,11 +58,25 @@ export default function MoodPage() {
   }, [selectedMoodId]);
 
   const sourcePicks = apiPicks && apiPicks.length > 0 ? apiPicks : PICKS;
-  const displayedPicks = getPicksForMood({
+  const rotationKey = `${user?.id || user?.email || 'guest'}:${selectedMoodId}:${new Date().toISOString().slice(0, 10)}`;
+  const displayedPicks = useMemo(() => getPicksForMood({
     moodId: selectedMoodId,
     picks: sourcePicks,
     count: picksCount,
-  });
+    savedIds,
+    seenTitleIds,
+    rotationKey,
+  }), [picksCount, rotationKey, savedIds, seenTitleIds, selectedMoodId, sourcePicks]);
+
+  useEffect(() => {
+    if (picksLoading || displayedPicks.length === 0) return;
+    const titleIds = displayedPicks.map((pick) => pick.id).filter(Boolean);
+    const impressionKey = `${selectedMoodId}:${titleIds.join(',')}`;
+    if (recordedImpressionKeys.current.has(impressionKey)) return;
+    recordedImpressionKeys.current.add(impressionKey);
+    moodsService.createImpressions(selectedMoodId, titleIds)
+      .catch(console.error);
+  }, [displayedPicks, picksLoading, selectedMoodId]);
 
   const handleMoodSelect = useCallback((moodId) => {
     setSelectedMoodId(moodId);

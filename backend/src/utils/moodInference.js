@@ -10,6 +10,7 @@ const MOOD_IDS = [
 
 const FALLBACK_MOOD = 'soft';
 const STRONG_SIGNAL_MIN_SCORE = 3;
+const SECONDARY_SIGNAL_MIN_SCORE = 4;
 
 const GENRE_MOOD_MAP = {
   Comedy: ['fried', 'soft', 'chaotic'],
@@ -30,13 +31,13 @@ const GENRE_MOOD_MAP = {
 };
 
 const KEYWORD_BOOSTS = {
-  soft: ['heartwarming', 'gentle', 'feel-good', 'friendship', 'warm', 'tender'],
-  fried: ['easy', 'light', 'funny', 'simple', 'comfort', 'playful'],
-  drained: ['quiet', 'slow', 'calm', 'easygoing', 'minimal'],
-  chaotic: ['wild', 'absurd', 'chaotic', 'unpredictable', 'messy'],
-  lockedin: ['complex', 'thoughtful', 'moral', 'layered', 'psychological', 'investigation'],
-  overwhelmed: ['emotional', 'grief', 'loss', 'heartbreak', 'pain', 'love'],
-  wired: ['intense', 'thrilling', 'high stakes', 'tense', 'danger', 'adrenaline'],
+  soft: ['heartwarming', 'gentle', 'feel-good', 'friendship', 'warm', 'tender', 'cozy', 'sincere', 'healing', 'hopeful'],
+  fried: ['easy', 'light', 'funny', 'simple', 'comfort', 'playful', 'silly', 'low stakes', 'familiar', 'hangout'],
+  drained: ['quiet', 'slow', 'calm', 'easygoing', 'minimal', 'soothing', 'peaceful', 'restful', 'slice of life'],
+  chaotic: ['wild', 'absurd', 'chaotic', 'unpredictable', 'messy', 'surreal', 'bizarre', 'frenetic', 'madcap'],
+  lockedin: ['complex', 'thoughtful', 'moral', 'layered', 'psychological', 'investigation', 'mystery', 'puzzle', 'strategic', 'conspiracy'],
+  overwhelmed: ['emotional', 'grief', 'loss', 'heartbreak', 'pain', 'love', 'cathartic', 'moving', 'family drama', 'healing'],
+  wired: ['intense', 'thrilling', 'high stakes', 'tense', 'danger', 'adrenaline', 'fast-paced', 'chase', 'survival', 'violent'],
 };
 
 function createEmptyScores() {
@@ -112,10 +113,9 @@ export function inferMoodsFromWatchmodeTitle(title = {}) {
     };
   }
 
-  // Return 1 or 2 moods:
-  // include second mood only when it is close to the top score.
+  // Keep secondary moods rare so one title does not flood multiple mood pools.
   const inferredMoods = [topMood[0]];
-  if (secondMood && topMood[1] - secondMood[1] <= 1) {
+  if (secondMood && topMood[1] === secondMood[1] && secondMood[1] >= SECONDARY_SIGNAL_MIN_SCORE) {
     inferredMoods.push(secondMood[0]);
   }
 
