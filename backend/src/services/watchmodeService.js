@@ -73,10 +73,12 @@ function normalizePlatform(sources = []) {
 
 function normalizeTitle(moodId, detail) {
   const { inferred_moods, mood_scores } = inferMoodsFromWatchmodeTitle(detail);
+  const primaryMoodId = inferred_moods[0] || moodId;
 
   return {
     id: `wm_${detail.id}`,
-    moodId,
+    moodId: primaryMoodId,
+    requestedMoodId: moodId,
     title: detail.title,
     year: detail.year,
     imageUrl: detail.poster || null,

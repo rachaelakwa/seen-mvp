@@ -50,11 +50,13 @@ export function getPicksForMood({
     }
     return false;
   });
+  const fallbackPicks = picks.filter((pick) => !filtered.includes(pick));
   const primaryMoodPicks = filtered.filter((pick) => pick.moodId === moodId);
   const secondaryMoodPicks = filtered.filter((pick) => pick.moodId !== moodId);
   const rotated = [
     ...rotatePicks(primaryMoodPicks, `${rotationKey}:primary`),
     ...rotatePicks(secondaryMoodPicks, `${rotationKey}:secondary`),
+    ...rotatePicks(fallbackPicks, `${rotationKey}:fallback`),
   ];
   return prioritizeFreshPicks(rotated, savedIds, seenTitleIds).slice(0, count);
 }

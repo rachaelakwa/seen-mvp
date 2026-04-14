@@ -23,6 +23,7 @@ export default function MoodPage() {
   const [apiPicks, setApiPicks] = useState(null);
   const [picksLoading, setPicksLoading] = useState(true);
   const recordedImpressionKeys = useRef(new Set());
+  const sessionSeenTitleIds = useRef(new Set());
 
   const displayName = user?.firstName || user?.username || 'there';
 
@@ -59,14 +60,17 @@ export default function MoodPage() {
 
   const sourcePicks = apiPicks && apiPicks.length > 0 ? apiPicks : PICKS;
   const rotationKey = `${user?.id || user?.email || 'guest'}:${selectedMoodId}:${new Date().toISOString().slice(0, 10)}`;
-  const displayedPicks = useMemo(() => getPicksForMood({
-    moodId: selectedMoodId,
-    picks: sourcePicks,
-    count: picksCount,
-    savedIds,
-    seenTitleIds,
-    rotationKey,
-  }), [picksCount, rotationKey, savedIds, seenTitleIds, selectedMoodId, sourcePicks]);
+  const displayedPicks = useMemo(() => {
+    const seenIds = new Set([...seenTitleIds, ...sessionSeenTitleIds.current]);
+    return getPicksForMood({
+      moodId: selectedMoodId,
+      picks: sourcePicks,
+      count: picksCount,
+      savedIds,
+      seenTitleIds: seenIds,
+      rotationKey,
+    });
+  }, [picksCount, rotationKey, savedIds, seenTitleIds, selectedMoodId, sourcePicks]);
 
   useEffect(() => {
     if (picksLoading || displayedPicks.length === 0) return;
@@ -74,6 +78,7 @@ export default function MoodPage() {
     const impressionKey = `${selectedMoodId}:${titleIds.join(',')}`;
     if (recordedImpressionKeys.current.has(impressionKey)) return;
     recordedImpressionKeys.current.add(impressionKey);
+    titleIds.forEach((titleId) => sessionSeenTitleIds.current.add(titleId));
     moodsService.createImpressions(selectedMoodId, titleIds)
       .catch(console.error);
   }, [displayedPicks, picksLoading, selectedMoodId]);
