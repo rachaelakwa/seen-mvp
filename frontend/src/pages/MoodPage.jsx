@@ -58,7 +58,15 @@ export default function MoodPage() {
     return () => { cancelled = true; };
   }, [selectedMoodId]);
 
-  const sourcePicks = apiPicks && apiPicks.length > 0 ? apiPicks : PICKS;
+  const sourcePicks = useMemo(() => {
+    const fallbackPicks = PICKS.filter((pick) => pick.moodId === selectedMoodId);
+    if (!apiPicks || apiPicks.length === 0) return PICKS;
+    const apiPickIds = new Set(apiPicks.map((pick) => pick.id));
+    return [
+      ...apiPicks,
+      ...fallbackPicks.filter((pick) => !apiPickIds.has(pick.id)),
+    ];
+  }, [apiPicks, selectedMoodId]);
   const rotationKey = `${user?.id || user?.email || 'guest'}:${selectedMoodId}:${new Date().toISOString().slice(0, 10)}`;
   const displayedPicks = useMemo(() => {
     const seenIds = new Set([...seenTitleIds, ...sessionSeenTitleIds.current]);

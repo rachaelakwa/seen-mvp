@@ -44,18 +44,22 @@ export function getPicksForMood({
     // Backward-compatible filtering:
     // - static picks use moodId
     // - Watchmode picks can include inferred_moods
+    // - Watchmode picks also preserve the requested mood as a softer fallback match
     if (pick.moodId === moodId) return true;
     if (Array.isArray(pick.inferred_moods)) {
       return pick.inferred_moods.includes(moodId);
     }
+    if (pick.requestedMoodId === moodId) return true;
     return false;
   });
   const fallbackPicks = picks.filter((pick) => !filtered.includes(pick));
   const primaryMoodPicks = filtered.filter((pick) => pick.moodId === moodId);
-  const secondaryMoodPicks = filtered.filter((pick) => pick.moodId !== moodId);
+  const secondaryMoodPicks = filtered.filter((pick) => pick.moodId !== moodId && pick.requestedMoodId !== moodId);
+  const requestedMoodPicks = filtered.filter((pick) => pick.moodId !== moodId && pick.requestedMoodId === moodId);
   const rotated = [
     ...rotatePicks(primaryMoodPicks, `${rotationKey}:primary`),
     ...rotatePicks(secondaryMoodPicks, `${rotationKey}:secondary`),
+    ...rotatePicks(requestedMoodPicks, `${rotationKey}:requested`),
     ...rotatePicks(fallbackPicks, `${rotationKey}:fallback`),
   ];
   return prioritizeFreshPicks(rotated, savedIds, seenTitleIds).slice(0, count);

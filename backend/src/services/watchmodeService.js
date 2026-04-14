@@ -20,7 +20,9 @@ const MOOD_GENRES = {
 const cache = new Map();
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
 const TITLES_PER_MOOD = 10;
-const WATCHMODE_CANDIDATE_LIMIT = 20;
+const WATCHMODE_CANDIDATE_LIMIT = 25;
+const WATCHMODE_DETAIL_BATCH_SIZE = 5;
+const MIN_GOOD_FIT_SCORE = 3;
 // In-memory detail cache: watchmodeId → { data, expiresAt }
 const detailCache = new Map();
 const DETAIL_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
@@ -103,6 +105,39 @@ function moodFitScore(title, moodId) {
   return selectedMoodScore * 3 + directMoodBonus - strongestOtherScore;
 }
 
+function hasGoodMoodFit(title, moodId) {
+  return moodFitScore(title, moodId) >= MIN_GOOD_FIT_SCORE;
+}
+
+async function fetchStreamableTitlesFromListings(listings, moodId) {
+  const streamableTitles = [];
+  const seenTitleIds = new Set();
+
+  for (let start = 0; start < listings.length; start += WATCHMODE_DETAIL_BATCH_SIZE) {
+    const batch = listings.slice(start, start + WATCHMODE_DETAIL_BATCH_SIZE);
+    const detailResults = await Promise.allSettled(
+      batch.map(t => fetchTitleDetails(t.id))
+    );
+
+    detailResults
+      .filter(r => r.status === 'fulfilled')
+      .map(r => normalizeTitle(moodId, r.value))
+      .filter(t => t.platform !== null)
+      .forEach((title) => {
+        if (seenTitleIds.has(title.id)) return;
+        seenTitleIds.add(title.id);
+        streamableTitles.push(title);
+      });
+
+    const goodMoodFitCount = streamableTitles.filter((title) => hasGoodMoodFit(title, moodId)).length;
+    if (streamableTitles.length >= TITLES_PER_MOOD && goodMoodFitCount >= TITLES_PER_MOOD) {
+      break;
+    }
+  }
+
+  return streamableTitles;
+}
+
 export async function getTitlesByMood(moodId) {
   // Optional local/demo mode: skip Watchmode network calls entirely.
   if (config.disableWatchmode) {
@@ -117,16 +152,9 @@ export async function getTitlesByMood(moodId) {
 
   try {
     const listings = await fetchTitlesByMood(moodId);
+    const streamableTitles = await fetchStreamableTitlesFromListings(listings, moodId);
 
-    // Fetch details + sources for all listings
-    const detailResults = await Promise.allSettled(
-      listings.map(t => fetchTitleDetails(t.id))
-    );
-
-    const titles = detailResults
-      .filter(r => r.status === 'fulfilled')
-      .map(r => normalizeTitle(moodId, r.value))
-      .filter(t => t.platform !== null) // only include titles with a streaming source
+    const titles = streamableTitles
       .map((title, index) => ({ title, index }))
       .sort((a, b) => {
         const scoreDiff = moodFitScore(b.title, moodId) - moodFitScore(a.title, moodId);
